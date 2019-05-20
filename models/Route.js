@@ -4,8 +4,8 @@ const timestamps = require('mongoose-timestamp');
 
 const RoutesSchema = new Schema({
     bus_id: {
-            type: Schema.Types.ObjectId,
-            ref: 'Bus'
+        type: Schema.Types.ObjectId,
+        ref: 'Bus'
     },
     routes: {
         from: {
@@ -17,13 +17,15 @@ const RoutesSchema = new Schema({
             required: true
         }
     },
-    departureDate:{
-        type: String,
-        required: true
-    },
-    departureTime:{
-        type: String,
-        required: true
+    departure: {
+        date:{
+            type: String,
+            required: true
+        },
+        time:{
+            type: String,
+            required: true
+        }
     },
     price: {
         type: Number,
@@ -34,15 +36,15 @@ const RoutesSchema = new Schema({
         required: true
     },
     seats: [{
-            seatNumber: {
-                type: String,
-                required: true
-            },
-            
-            isTaken: Boolean
-        }], 
-    });
-    
+        seatNumber: {
+            type: String,
+            required: true
+        },
+        
+        isTaken: Boolean
+    }], 
+});
+
 RoutesSchema.plugin(timestamps);
 
 module.exports = mongoose.model("Route", RoutesSchema);

@@ -32,6 +32,14 @@ const BusSchema = new Schema({
         type: String,
         required: true
     },
+    image_inside: {
+        type: String,
+        required: true
+    },
+    image_front: {
+        type: String,
+        required: true
+    },
     isAvailable:Boolean
 });
 

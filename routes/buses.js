@@ -10,7 +10,7 @@ router.get("/", async (req, res) => {
 });
 
 
-router.post("/", async (req, res) => {
+router.post("/", [auth, admin],  async (req, res) => {
 
     let bus = BusModel({
         busName: req.body.busName,
@@ -21,6 +21,8 @@ router.post("/", async (req, res) => {
             DriverLicense: req.body.DriverLicense
         },
         bus_type: req.body.bus_type,
+        image_inside: req.body.image_inside,
+        image_front: req.body.image_front,
         isAvailable: "true"
 
     });
@@ -29,9 +31,9 @@ router.post("/", async (req, res) => {
     res.send(bus);
 });
 
-router.put('/:id', [auth, admin], async (req, res) => {
+router.put('/:bus_id', [auth, admin], async (req, res) => {
 
-    let bus = await BusModel.findById(req.params.id);
+    let bus = await BusModel.findById(req.params.bus_id);
 
     bus.busName = req.body.busName;
     bus.plate_number = req.body.plate_number;
@@ -39,6 +41,14 @@ router.put('/:id', [auth, admin], async (req, res) => {
     bus.Driver.DriverName = req.body.DriverName;
     bus.Driver.DriverLicense = req.body.DriverLicense;
     bus.bus_type = req.body.bus_type;
+
+    if(req.body.image_inside){
+        bus.image_inside = req.body.image_inside;
+    }
+
+    if(req.body.image_front){
+        bus.image_front = req.body.image_front;
+    }
     
     bus.isAvailable = req.body.isAvailable;
 

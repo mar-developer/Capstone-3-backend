@@ -6,7 +6,7 @@ const auth = require("../middleware/auth");
 const admin = require("../middleware/admin");
 
 
-router.get("/",auth,  async (req, res) => {
+router.get("/",  async (req, res) => {
     let route = await RoutesSchema.find();
     res.send(route);
 });
@@ -16,20 +16,29 @@ router.get("/:id",auth,  async (req, res) => {
     res.send(route);
 });
 
+/* edit bus */
+router.put('/edit_bus/:id', [auth, admin], async (req, res) => {
+    let bus = await BusModel.findById(req.params.id);
+    bus.isAvailable = req.body.isAvailable;
 
-router.post("/", async (req, res) => {
+    bus = await bus.save();
+    res.send(bus);
+});
+
+router.post("/", [auth, admin], async (req, res) => {
     
-
+    
     let seatsArray = [];
-    if (req.body.total_seats == 45 || req.body.total_seats == 53) {
-        let r = 4;
+    let r = 0;
+    if (req.body.total_seats === 60) {
+        r = 5;
     }else{
-        let r = 5;
+        r = 4;
     }
-
+    
     for (let i = 'A'.charCodeAt(0); i <= 'Z'.charCodeAt(0); i++) {
         for (let s = 1; s <= r; s++) {
-            if (seatsArray.length <= req.body.total_seats ) {
+            if (seatsArray.length < req.body.total_seats ) {
                 seatsArray.push({
                     "seatNumber": String.fromCharCode(i).concat(s),
                     "isTaken": false
@@ -43,14 +52,16 @@ router.post("/", async (req, res) => {
             from: req.body.from,
             to: req.body.to
         },
-        departureDate: req.body.departureDate,
-        departureTime: req.body.departureTime,
+        departure: {
+            date: req.body.date,
+            time: req.body.time
+        },
         price: req.body.price,
         total_seats: req.body.total_seats,
         seats: seatsArray
         
     });
-
+    
     route = await route.save();
     res.send(route);
 });
@@ -59,7 +70,7 @@ router.post("/", async (req, res) => {
 router.put('/:routeId/:seatId', auth,async (req, res) => {
     let d_id = req.params.destinationId;
     let s_id = req.params.seatId;
-
+    
     let route = await RoutesSchema.findOneAndUpdate(
         { "_id": d_id, "seats._id": s_id},
         {
@@ -68,29 +79,62 @@ router.put('/:routeId/:seatId', auth,async (req, res) => {
             }
         },
         );
-
+        
         res.send(route);
-});
+    });
+    
+router.put('/:routeId',auth , async (req, res) => {
+    let route = await RoutesSchema.findById(req.params.routeId);
+        
+        
+        if (route.bus_id != req.body.bus_id){
+            let seatsArray = [];
+            route.seats = seatsArray;
+            route = await route.save();
 
-router.put('/:id',auth , async (req, res) => {
-    let route = await RoutesSchema.findById(req.params.id);
+            let r = 0;
+            if (req.body.total_seats === 60) {
+                r = 5;
+            } else {
+                r = 4;
+            }
+            
+            for (let i = 'A'.charCodeAt(0); i <= 'Z'.charCodeAt(0); i++) {
+                for (let s = 1; s <= r; s++) {
+                    if (seatsArray.length < req.body.total_seats) {
+                        seatsArray.push({
+                            "seatNumber": String.fromCharCode(i).concat(s),
+                            "isTaken": false
+                        });
+                    }
+                }
+            }
 
-    route.bus_id = req.body.bus_id;
-    route.departureDate = req.body.departureDate;
-    route.departureTime = req.body.departureTime;
-    route.routes.from = req.body.from;
-    route.routes.to = req.body.to;
-    route.price = req.body.price;
+            route.seats = seatsArray;
+            route.total_seats = req.body.total_seats;
+            route.bus_id = req.body.bus_id;
+        }
+        route.departure.date = req.body.date;
+        route.departure.time = req.body.time;
+        route.routes.from = req.body.from;
+        route.routes.to = req.body.to;
+        route.price = req.body.price;
+        
+        
+        route = await route.save();
+        res.send(route);
+    });
+    
+    router.delete("/:route_id/:bus_id", [auth, admin], async (req, res) => {
 
-       
-    route = await route.save();
-    res.send(route);
-});
+        let bus = await BusModel.findById(req.params.bus_id);
+        bus.isAvailable = true;
 
-router.delete("/:id", [auth, admin], async (req, res) => {
-    let route = await RoutesSchema.findByIdAndDelete(req.params.id);
+        bus = await bus.save();
 
-    res.send(route);
-});
-
-module.exports = router;
+        let route = await RoutesSchema.findByIdAndDelete(req.params.route_id);
+        
+        res.send(route);
+    });
+    
+    module.exports = router;
