@@ -8,7 +8,7 @@ app.use(cors());
 const config = require('./config');
 const user = require('./routes/users');
 const bus = require('./routes/buses');
-const image = require('./routes/images');
+const comment = require('./routes/comments');
 const route = require('./routes/routes');
 const ticket = require('./routes/tickets');
 const auth = require("./routes/auth");
@@ -28,7 +28,7 @@ app.use(express.json());
 app.use("/api/auth", auth);
 app.use("/api/users", user);
 app.use("/api/buses", bus);
-app.use("/api/images", image);
+app.use("/api/comments", comment);
 app.use("/api/routes", route);
 app.use("/api/tickets", ticket);
 

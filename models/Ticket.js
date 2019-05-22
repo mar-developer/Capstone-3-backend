@@ -8,7 +8,14 @@ const TicketSchema = new Schema({
     required: true,
     unique: true
   },
-  quantity: Number,
+  quantity: {
+    type: Number,
+    required: true
+  },
+  price: {
+    type: Number,
+    required: true
+  },
   bus_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Bus'
@@ -17,14 +24,19 @@ const TicketSchema = new Schema({
         type: String,
         required: true
   },
-  destination_id:{
+  route_id:{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Destination'
+    ref: 'Route'
   },
+  seats: {
+      type: String,
+      required: true
+    },
   user_id:{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
-  }
+  },
+  isPaid: Boolean
 
 });
 

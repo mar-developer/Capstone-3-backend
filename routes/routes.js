@@ -11,10 +11,20 @@ router.get("/",  async (req, res) => {
     res.send(route);
 });
 
-router.get("/:id",auth,  async (req, res) => {
-    let route = await BusModel.findById(req.params.id);
+
+router.get("/:route_id",auth,  async (req, res) => {
+    let route = await RoutesSchema.findById(req.params.route_id);
     res.send(route);
 });
+
+// getting the specific value on subdocument
+router.get('/:route_id/:seat_id', auth, async (req, res) => {
+    let route = await RoutesSchema.findById(req.params.route_id);
+    
+    let seat = route.seats.id(req.params.seat_id);
+    res.send(seat);
+});
+
 
 /* edit bus */
 router.put('/edit_bus/:id', [auth, admin], async (req, res) => {
@@ -67,15 +77,15 @@ router.post("/", [auth, admin], async (req, res) => {
 });
 
 //edit seats
-router.put('/:routeId/:seatId', auth,async (req, res) => {
-    let d_id = req.params.destinationId;
-    let s_id = req.params.seatId;
+router.put('/:route_id/:seat_id', auth,async (req, res) => {
+    let d_id = req.params.route_id;
+    let s_id = req.params.seat_id;
     
     let route = await RoutesSchema.findOneAndUpdate(
         { "_id": d_id, "seats._id": s_id},
         {
             $set:{
-                "seats.$.seatNumber": req.body.seatNumber
+                "seats.$.isTaken": req.body.isTaken
             }
         },
         );

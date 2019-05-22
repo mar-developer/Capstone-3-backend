@@ -10,6 +10,11 @@ router.get("/", [auth, admin], async (req, res) => {
     res.send(users);
 });
 
+router.get("/:id", auth, async (req, res) => {
+    let users = await UserModel.findById(req.params.id);
+    res.send(users);
+});
+
 
 router.post("/", async (req, res) => {
     

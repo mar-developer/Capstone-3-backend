@@ -9,6 +9,11 @@ router.get("/", async (req, res) => {
     res.send(buses);
 });
 
+router.get("/:id", auth, async (req, res) => {
+    let route = await BusModel.findById(req.params.id);
+    res.send(route);
+});
+
 
 router.post("/", [auth, admin],  async (req, res) => {
 
