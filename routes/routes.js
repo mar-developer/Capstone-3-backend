@@ -136,6 +136,8 @@ router.put('/:routeId',auth , async (req, res) => {
 
             let bus = await BusModel.findById(route.bus_id);
             bus.isAvailable = true;
+
+            bus = await bus.save();
         }
         
         route = await route.save();
