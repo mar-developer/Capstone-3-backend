@@ -9,6 +9,7 @@ const config = require('./config');
 const user = require('./routes/users');
 const bus = require('./routes/buses');
 const comment = require('./routes/comments');
+const message = require('./routes/messages');
 const route = require('./routes/routes');
 const ticket = require('./routes/tickets');
 const auth = require("./routes/auth");
@@ -29,6 +30,7 @@ app.use("/api/auth", auth);
 app.use("/api/users", user);
 app.use("/api/buses", bus);
 app.use("/api/comments", comment);
+app.use("/api/messages", message);
 app.use("/api/routes", route);
 app.use("/api/tickets", ticket);
 

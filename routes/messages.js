@@ -1,14 +1,14 @@
 const express = require("express");
 const router = express.Router();
-const CommentSchema = require('../models/Comment');
+const MessageSchema = require('../models/Comment');
 
 router.get("/", async (req, res) => {
-    let comment = await CommentSchema.find();
-    res.send(comment);
+    let message = await MessageSchema.find();
+    res.send(message);
 });
 
 router.post("/", async (req, res) => {
-    let comment = CommentSchema({
+    let message = MessageSchema({
         name: req.body.name,
         email: req.body.email,
         contact: req.body.contact,
@@ -17,7 +17,7 @@ router.post("/", async (req, res) => {
     });
 
     comment = await comment.save();
-    res.send(comment);
+    res.send(message);
 });
 
 module.exports = router
