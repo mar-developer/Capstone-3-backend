@@ -43,6 +43,7 @@ const RoutesSchema = new Schema({
         
         isTaken: Boolean
     }], 
+    isActive: Boolean
 });
 
 RoutesSchema.plugin(timestamps);

@@ -68,7 +68,8 @@ router.post("/", [auth, admin], async (req, res) => {
         },
         price: req.body.price,
         total_seats: req.body.total_seats,
-        seats: seatsArray
+        seats: seatsArray,
+        isActive: true
         
     });
     
@@ -130,6 +131,10 @@ router.put('/:routeId',auth , async (req, res) => {
         route.routes.to = req.body.to;
         route.price = req.body.price;
         
+        if (req.body.isActive == false) {
+            let bus = await BusModel.findById(req.body.bus_id);
+            bus.isAvailable = true;
+        }
         
         route = await route.save();
         res.send(route);
