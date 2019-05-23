@@ -134,7 +134,7 @@ router.put('/:routeId',auth , async (req, res) => {
         if (req.body.isActive == false) {
             route.isActive = req.body.isActive;
 
-            let bus = await BusModel.findById(req.body.bus_id);
+            let bus = await BusModel.findById(route.bus_id);
             bus.isAvailable = true;
         }
         
