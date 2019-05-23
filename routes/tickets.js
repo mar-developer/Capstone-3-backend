@@ -49,8 +49,12 @@ router.post("/", async (req, res) => {
     res.send(ticket);
 });
 
-router.put('/:id', auth,async (req, res) => {
-   
+router.put('/:id', [auth, admin],async (req, res) => {
+    let ticket = await TicketModel.findById(req.params.id);
+    ticket.isPaid = true;
+
+    ticket = await ticket.save();
+    res.send(ticket);
 });
 
 router.delete("/:id", [auth, admin],async (req, res) => {
