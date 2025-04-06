@@ -28,7 +28,7 @@ app.use(express.json());
 
 app.use("/api/auth", auth);
 app.use("/api/users", user);
-app.use("/api/buses", bus);
+app.use("/api/buses", bus); 
 app.use("/api/comments", comment);
 app.use("/api/messages", message);
 app.use("/api/routes", route);
